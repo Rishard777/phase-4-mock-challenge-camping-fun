@@ -1,6 +1,6 @@
 class CampersController < ApplicationController
 rescue_from ActiveRecord::RecordNotFound, with: :record_not_found_response
-# rescue_from AcitveRecord::RecordInvalid, with: :render_unprocessable_entity_response
+rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
     def index
         render json: Camper.all
     end
@@ -11,7 +11,7 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found_response
     end
 
     def create
-        cm = Camper.create(camper_params)
+        cm = Camper.create!(camper_params)
         render json: cm, status: :created
     end
 
@@ -24,7 +24,8 @@ rescue_from ActiveRecord::RecordNotFound, with: :record_not_found_response
         params.permit(:name, :age)
     end
 
-    # def render_unprocessable_entity_response(exception)
-    #     render json: {errors: exception.record.errors.full_messages}, status: :unprocessable_entity
-    # end
+    def render_unprocessable_entity_response(exception)
+        render json: {errors: exception.record.errors.full_messages}, status: :unprocessable_entity
+    end
+
 end
